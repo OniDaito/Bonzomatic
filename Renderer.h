@@ -1,5 +1,9 @@
 #include <Platform.h>
 
+#ifdef __APPLE__
+#include <SDL.h>
+#endif
+
 typedef enum {
   RENDERER_WINDOWMODE_WINDOWED = 0,
   RENDERER_WINDOWMODE_FULLSCREEN,
@@ -53,6 +57,10 @@ namespace Renderer
     int height;
     TEXTURETYPE type;
   };
+
+#ifdef __APPLE__
+  extern SDL_Window *mWindow;
+#endif
 
   Texture * CreateRGBA8TextureFromFile( char * szFilename );
   Texture * CreateA8TextureFromData( int w, int h, unsigned char * data );

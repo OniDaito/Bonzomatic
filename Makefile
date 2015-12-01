@@ -179,8 +179,8 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 ifeq ($(UNAME_S),Darwin)
-	CXXFLAGS := -std=c++11 -arch x86_64 -Os -Wall -DSCI_LEXER -DSCI_NAMESPACE -DGTK `pkg-config --cflags sdl`
-	LDFLAGS := -Lexternal/bass -lbass -framework OpenGL -framework Cocoa `pkg-config --libs sdl`
+	CXXFLAGS := -std=c++11 -g -arch x86_64 -Os -Wall -DSCI_LEXER -DSCI_NAMESPACE -DGTK `pkg-config --cflags sdl2`
+	LDFLAGS := -Lexternal/bass -lbass -framework OpenGL -framework Cocoa `pkg-config --libs sdl2`
 endif
 
 CXXFLAGS += $(foreach p,$(INCLUDEPATHS),$(addprefix -I,$p))
