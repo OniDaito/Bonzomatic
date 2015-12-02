@@ -69,8 +69,8 @@ int main()
   settings.nHeight = 720;
   settings.windowMode = RENDERER_WINDOWMODE_WINDOWED;
 #else
-  settings.nWidth = 1920;
-  settings.nHeight = 1080;
+  settings.nWidth = 1280;
+  settings.nHeight = 720;
   settings.windowMode = RENDERER_WINDOWMODE_FULLSCREEN;
   if (!Renderer::OpenSetupDialog( &settings ))
     return -1;
@@ -309,9 +309,12 @@ int main()
     }
     Renderer::mouseEventBufferCount = 0;
 
+    // Note the keycodes are bigger due to unicode - ultimately we need to rethink keyboard input when using the SDL2 etc
+
     for(int i=0; i<Renderer::keyEventBufferCount; i++)
     {
-      if (Renderer::keyEventBuffer[i].scanCode == 283) // F2
+      printf("Key Code %d\n", Renderer::keyEventBuffer[i].character);
+      if (Renderer::keyEventBuffer[i].character == 1073741883) // F2
       {
         if (bTexPreviewVisible)
         {
@@ -326,9 +329,10 @@ int main()
           bTexPreviewVisible = true;
         }
       }
-      else if (Renderer::keyEventBuffer[i].scanCode == 286) // F5
+      else if (Renderer::keyEventBuffer[i].character == 1073741886) // F5
       {
         mShaderEditor.GetText(szShader,65535);
+   
         if (Renderer::ReloadShader( szShader, strlen(szShader), szError, 4096 ))
         {
           // TODO - This is breaking on Apple - Will fix
@@ -344,29 +348,16 @@ int main()
           mDebugOutput.SetText( szError );
         }
       }
-      else if (Renderer::keyEventBuffer[i].scanCode == 292) // F11
+      else if (Renderer::keyEventBuffer[i].character == 1073741892) // F11
       {
         bShowGui = !bShowGui;
       }
       else if (bShowGui)
       {
-        bool consumed = false;
-        if (Renderer::keyEventBuffer[i].scanCode)
-        {
-        mShaderEditor.KeyDown(
-          iswalpha(Renderer::keyEventBuffer[i].scanCode) ? towupper(Renderer::keyEventBuffer[i].scanCode) : Renderer::keyEventBuffer[i].scanCode,
-          Renderer::keyEventBuffer[i].shift,
-          Renderer::keyEventBuffer[i].ctrl, 
-          Renderer::keyEventBuffer[i].alt,
-          &consumed);
-        }
-        if (!consumed && Renderer::keyEventBuffer[i].character)
-        {
-          char    utf8[5] = {0,0,0,0,0};
-          wchar_t utf16[2] = {Renderer::keyEventBuffer[i].character, 0};
-          Scintilla::UTF8FromUTF16(utf16, 1, utf8, 4 * sizeof(char));
-          mShaderEditor.AddCharUTF(utf8, strlen(utf8));
-        }
+        
+         
+          mShaderEditor.AddCharUTF(Renderer::keyEventBuffer[i].text, strlen( Renderer::keyEventBuffer[i].text ));
+      
 
       }
     }

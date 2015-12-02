@@ -186,14 +186,7 @@ namespace Renderer
       printf("[Renderer] SDL_Init failed\n");
       return false;
     }
-/*
-    SDL_Surface *surface = SDL_GetVideoSurface();
-    uint32_t flags = SDL_HWSURFACE|SDL_OPENGL|SDL_OPENGLBLIT;
-    
-  //  if (settings->windowMode == RENDERER_WINDOWMODE_FULLSCREEN)
-      flags |= SDL_FULLSCREEN;
-*/
-    
+   
     SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 8 );
     SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 8 );
     SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 8 );
@@ -204,28 +197,22 @@ namespace Renderer
 
     nWidth =  settings->nWidth;
     nHeight = settings->nHeight;
-    /*mScreen = SDL_SetVideoMode( settings->nWidth, settings->nHeight, 32, flags );
-    if (!mScreen)
-    {
-      printf("[Renderer] SDL_SetVideoMode failed\n");
-      SDL_Quit();
-      return false;
-    }
 
-    SDL_EnableUNICODE(true);
-    SDL_EnableKeyRepeat(250, 20);
-*/
 #ifdef _WIN32
     if (settings->bVsync)
       wglSwapIntervalEXT(1);
 #endif
+
+    uint32_t flags = SDL_WINDOW_OPENGL;
+    if (settings->windowMode == RENDERER_WINDOWMODE_FULLSCREEN)
+      flags |= SDL_WINDOW_FULLSCREEN;
 
 
     mWindow = SDL_CreateWindow("Bonzomatic",
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
         settings->nWidth, settings->nHeight,
-        SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL);
+        flags);
 
     SDL_GLContext glcontext = SDL_GL_CreateContext(mWindow);
 
@@ -249,14 +236,21 @@ namespace Renderer
       {
         run = false;
       }
+      else if (E.type == SDL_TEXTINPUT){
+        std::cout << "TEXT INPUT " <<  E.text.text << std::endl;
+        keyEventBuffer[keyEventBufferCount].shift = E.key.keysym.mod & KMOD_SHIFT;
+        memcpy(keyEventBuffer[keyEventBufferCount].text, E.text.text, 32);
+        keyEventBufferCount++;
+
+      }
       else if (E.type == SDL_KEYDOWN)
       {
         if (E.key.keysym.sym == SDLK_F4 && (E.key.keysym.mod == KMOD_LALT || E.key.keysym.mod == KMOD_RALT)) 
         {
           run = false;
         }
-        int sciKey;
-        /*switch(E.key.keysym.sym)
+        uint32_t sciKey;
+        switch(E.key.keysym.sym)
         {
           case SDLK_DOWN:         sciKey = SCK_DOWN;      break;
           case SDLK_UP:           sciKey = SCK_UP;        break;
@@ -275,8 +269,8 @@ namespace Renderer
           case SDLK_KP_PLUS:      sciKey = SCK_ADD;       break;
           case SDLK_KP_MINUS:     sciKey = SCK_SUBTRACT;  break;
           case SDLK_KP_DIVIDE:    sciKey = SCK_DIVIDE;    break;
-          //case SDLK_LSUPER:       sciKey = SCK_WIN;       break;
-          //case SDLK_RSUPER:       sciKey = SCK_RWIN;      break;
+          case SDLK_LGUI:         sciKey = SDLK_LGUI;     break;
+          case SDLK_RGUI:         sciKey = SDLK_RGUI;     break;
           case SDLK_MENU:         sciKey = SCK_MENU;      break;
           case SDLK_SLASH:        sciKey = '/';           break;
           case SDLK_ASTERISK:     sciKey = '`';           break;
@@ -293,20 +287,20 @@ namespace Renderer
             break;
           default:
             sciKey = E.key.keysym.sym;
-        }*/
+        }
   
-        sciKey = E.key.keysym.sym;
-        
-
+         
+        /*printf("keymod %c - %d\n", E.key.keysym.sym, E.key.keysym.scancode);    
+ 
         if (sciKey)
         {
           keyEventBuffer[keyEventBufferCount].ctrl  = E.key.keysym.mod & KMOD_LCTRL  || E.key.keysym.mod & KMOD_RCTRL;
           keyEventBuffer[keyEventBufferCount].alt   = E.key.keysym.mod & KMOD_LALT   || E.key.keysym.mod & KMOD_RALT;
-          keyEventBuffer[keyEventBufferCount].shift = E.key.keysym.mod & KMOD_LSHIFT || E.key.keysym.mod & KMOD_RSHIFT;
+          keyEventBuffer[keyEventBufferCount].shift = E.key.keysym.mod & KMOD_SHIFT;
           keyEventBuffer[keyEventBufferCount].scanCode = sciKey;
           keyEventBuffer[keyEventBufferCount].character = E.key.keysym.sym;
           keyEventBufferCount++;
-        }
+         }*/
 
       }
       else if (E.type == SDL_MOUSEMOTION)
@@ -392,6 +386,7 @@ namespace Renderer
     glCompileShader(shd);
     glGetShaderInfoLog(shd, nErrorBufferSize, &size, szErrorBuffer);
     glGetShaderiv(shd, GL_COMPILE_STATUS, &result);
+    
     if (!result)
     {
       glDeleteProgram(prg);

@@ -82,8 +82,9 @@ namespace Renderer
 
   struct KeyEvent
   {
-    int character;
-    int scanCode;
+    wchar_t character;
+    uint32_t scanCode;
+    char text[32];
     bool ctrl;
     bool shift;
     bool alt;

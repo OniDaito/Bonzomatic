@@ -257,6 +257,7 @@ void ShaderEditor::SetTicking( bool on )
 
 int ShaderEditor::KeyDown( int key, bool shift, bool ctrl, bool alt, bool *consumed )
 {
+  //printf("shift shift %c %d", key, shift);
   return Scintilla::Editor::KeyDown( key, shift, ctrl, alt, consumed );
 }
 
