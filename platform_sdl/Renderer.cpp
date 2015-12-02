@@ -204,7 +204,7 @@ namespace Renderer
 #endif
 
     uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS;
-    if (settings->windowMode == RENDERER_WINDOWMODE_FULLSCREEN)
+    //if (settings->windowMode == RENDERER_WINDOWMODE_FULLSCREEN)
       flags |= SDL_WINDOW_FULLSCREEN;
 
 
@@ -237,7 +237,7 @@ namespace Renderer
         run = false;
       }
       else if (E.type == SDL_TEXTINPUT){
-        std::cout << "TEXT INPUT " <<  E.text.text << std::endl;
+        //std::cout << "TEXT INPUT " <<  E.text.text << std::endl;
         keyEventBuffer[keyEventBufferCount].shift = E.key.keysym.mod & KMOD_SHIFT;
         memcpy(keyEventBuffer[keyEventBufferCount].text, E.text.text, 32);
         keyEventBufferCount++;
@@ -290,7 +290,6 @@ namespace Renderer
         }
   
          
-        /*printf("keymod %c - %d\n", E.key.keysym.sym, E.key.keysym.scancode);    
  
         if (sciKey)
         {
@@ -298,9 +297,9 @@ namespace Renderer
           keyEventBuffer[keyEventBufferCount].alt   = E.key.keysym.mod & KMOD_LALT   || E.key.keysym.mod & KMOD_RALT;
           keyEventBuffer[keyEventBufferCount].shift = E.key.keysym.mod & KMOD_SHIFT;
           keyEventBuffer[keyEventBufferCount].scanCode = sciKey;
-          keyEventBuffer[keyEventBufferCount].character = E.key.keysym.sym;
+          //keyEventBuffer[keyEventBufferCount].character = E.key.keysym.sym;
           keyEventBufferCount++;
-         }*/
+         }
 
       }
       else if (E.type == SDL_MOUSEMOTION)

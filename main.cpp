@@ -313,8 +313,7 @@ int main()
 
     for(int i=0; i<Renderer::keyEventBufferCount; i++)
     {
-      printf("Key Code %d\n", Renderer::keyEventBuffer[i].character);
-      if (Renderer::keyEventBuffer[i].character == 1073741883) // F2
+      if (Renderer::keyEventBuffer[i].scanCode == 1073741883) // F2
       {
         if (bTexPreviewVisible)
         {
@@ -329,7 +328,7 @@ int main()
           bTexPreviewVisible = true;
         }
       }
-      else if (Renderer::keyEventBuffer[i].character == 1073741886) // F5
+      else if (Renderer::keyEventBuffer[i].scanCode == 1073741886) // F5
       {
         mShaderEditor.GetText(szShader,65535);
    
@@ -348,12 +347,23 @@ int main()
           mDebugOutput.SetText( szError );
         }
       }
-      else if (Renderer::keyEventBuffer[i].character == 1073741892) // F11
+      else if (Renderer::keyEventBuffer[i].scanCode == 1073741892) // F11
       {
         bShowGui = !bShowGui;
       }
       else if (bShowGui)
       {
+        bool consumed = false;
+          if (Renderer::keyEventBuffer[i].scanCode)
+        {
+        mShaderEditor.KeyDown(
+          iswalpha(Renderer::keyEventBuffer[i].scanCode) ? towupper(Renderer::keyEventBuffer[i].scanCode) : Renderer::keyEventBuffer[i].scanCode,
+          Renderer::keyEventBuffer[i].shift,
+          Renderer::keyEventBuffer[i].ctrl, 
+          Renderer::keyEventBuffer[i].alt,
+          &consumed);
+        }
+        if (!consumed)
           mShaderEditor.AddCharUTF(Renderer::keyEventBuffer[i].text, strlen( Renderer::keyEventBuffer[i].text ));
       }
     }
