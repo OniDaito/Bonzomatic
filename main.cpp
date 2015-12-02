@@ -354,11 +354,7 @@ int main()
       }
       else if (bShowGui)
       {
-        
-         
           mShaderEditor.AddCharUTF(Renderer::keyEventBuffer[i].text, strlen( Renderer::keyEventBuffer[i].text ));
-      
-
       }
     }
     Renderer::keyEventBufferCount = 0;
