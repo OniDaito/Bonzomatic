@@ -203,7 +203,7 @@ namespace Renderer
       wglSwapIntervalEXT(1);
 #endif
 
-    uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS;
+    uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI;
     //if (settings->windowMode == RENDERER_WINDOWMODE_FULLSCREEN)
       flags |= SDL_WINDOW_FULLSCREEN;
 
