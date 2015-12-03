@@ -214,7 +214,11 @@ namespace Renderer
         settings->nWidth, settings->nHeight,
         flags);
 
+
     SDL_GLContext glcontext = SDL_GL_CreateContext(mWindow);
+
+    // We need to reset the width and height params for some reason
+    SDL_GetWindowSize(mWindow, &nWidth, &nHeight);
 
     run = true;
 
