@@ -205,7 +205,7 @@ namespace Renderer
 
     uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI;
     //if (settings->windowMode == RENDERER_WINDOWMODE_FULLSCREEN)
-      flags |= SDL_WINDOW_FULLSCREEN;
+    //  flags |= SDL_WINDOW_FULLSCREEN;
 
 
     mWindow = SDL_CreateWindow("Bonzomatic",

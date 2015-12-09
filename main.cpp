@@ -212,6 +212,7 @@ int main()
   bool shaderInitSuccessful = false;
   char szShader[65535];
   char szError[4096];
+ #ifndef __APPLE__ 
   FILE * f = fopen(Renderer::defaultShaderFilename,"rb");
   if (f)
   {
@@ -226,6 +227,25 @@ int main()
       shaderInitSuccessful = true;
     }
   }
+#else
+  std::cout << "Apple Read File: " << get_osx_cwd() + "/" + Renderer::defaultShaderFilename << std::endl;
+  std::string final_path = get_osx_cwd() + "/" + Renderer::defaultShaderFilename;
+  FILE * f = fopen(final_path.c_str(),"rb");
+  if (f) {
+    printf("Loading last shader...\n");
+
+    memset( szShader, 0, 65535 );
+    int n = fread( szShader, 1, 65535, f );
+    fclose(f);
+    if (Renderer::ReloadShader( szShader, strlen(szShader), szError, 4096 ))
+    {
+      printf("Last shader works fine.\n");
+      shaderInitSuccessful = true;
+    }
+  }
+
+
+#endif
   if (!shaderInitSuccessful)
   {
     printf("No valid last shader found, falling back to default...\n");
@@ -339,6 +359,13 @@ int main()
           FILE * f = fopen(Renderer::defaultShaderFilename,"wb");
           fwrite( szShader, strlen(szShader), 1, f );
           fclose(f);
+#else
+          std::cout << "Apple Write File: " << get_osx_cwd() + "/" + Renderer::defaultShaderFilename << std::endl;
+          std::string final_path = get_osx_cwd() + "/" + Renderer::defaultShaderFilename;
+          FILE * f = fopen(final_path.c_str(),"wb");
+          fwrite( szShader, strlen(szShader), 1, f );
+          fclose(f);
+
 #endif
           mDebugOutput.SetText( "" );
         }
